@@ -1,0 +1,287 @@
+# *****************************************************************
+#       Nome do projeto: Front End Huawei                         *
+#       Ambiente: 10.100.0.70                                     *
+#       Servidor de base: 10.100.0.72                             *
+#       Desenvolvido por: Gabriel Salgado                         *
+#       Cargo: Analista de Desenvolvimento                        *
+#       Data: 13/03/2019                                          *
+# *****************************************************************
+
+
+# ####################################################################### - BANCO DE DADOS - #######################################################################
+Ambiente: 10.100.0.70
+Base de dados: 10.100.0.72
+Customer: [CUSTOMER_NCM].[dbo].[CUSTOMER_HUAWEI_HOTLINE]
+Tabela de Pendencias: [CUSTOMER_NCM].[dbo].[CUSTOMER_HUAWEI_HOTLINE_PENDENCIAS]
+Callstatus: [CUSTOMER_NCM].[dbo].[HOTLINE_STATUS_ATENDIMENTO_V5]
+# ################################################################################################################################################################ #
+
+
+
+
+
+
+# ##################################################################### #
+Ultima atualização
+    Data: 27/05/2021
+    Nome: Alexandre Nascimento da silva
+    Cargo: Analista de desenvolvimento
+# ##################################################################### #
+
+
+
+
+
+
+
+# #######################################################################  - PROJETOS - #######################################################################
+1276 - APOIO LOJAS NO HOTLINE (27/05/2021)
+# ##################################################################### #
+
+
+
+
+
+
+# ####################################################################### - ATUALIZAÇÕES - #######################################################################
+
+# ##################################################################### #
+Projeto: 1276
+Data 27/05/2021
+
+Atualizado por
+    Nome: Alexandre Nascimento da Silva
+    Cargo: Analista de Desenvolvimento
+
+# ##################################################################### #
+
+Arquivos:
+    finalizar.php
+    carrega_status_contato.php
+    carrega_detalhe.php
+
+Banco de Dados: 
+    Servidor: 10.100.0.72
+        [CUSTOMER_NCM].[dbo].[HOTLINE_STATUS_ATENDIMENTO_DEV]
+        [CUSTOMER_NCM].[dbo].[HOTLINE_STATUS_ATENDIMENTO_V5]
+        [CUSTOMER_NCM].[dbo].[HOTLINE_STATUS_ATENDIMENTO_BKP]
+            Data do Backup: (2021-05-27 11:04:24.143)
+
+# ##################################################################### #
+
+
+# ******************************************
+# Codigos Atualizados
+
+
+1. Arquivo: finalizar.php
+    function carregaStatusAtendimento()
+    {
+        var statusAtendimento = document.getElementById('staAtendimento').value;
+        var origem = document.getElementById('oriAtendimento').value;
+        var contratoProposta = document.getElementById('opcContratoProposta').value;
+        var campanha = document.getElementById('campanha').value;
+
+        ajaxGet('carrega_detalhe.php?status='+statusAtendimento+'&origem='+origem+'&conpro='+contratoProposta+'&campanha='+campanha, document.getElementById('detAtendimento'), true);
+    }
+
+    function changeContatoAtendimemto()
+    {
+        var contatoAtendiento = document.getElementById('staContatoAtendimento').value;
+        var campanha = document.getElementById('campanha').value;
+
+        if(contatoAtendiento == "1-ATENDIMENTO COM SUCESSO")
+        {
+            document.getElementById('row5').style.display = "inherit";
+        }
+        else
+        {
+            document.getElementById('row5').style.display = "none";
+        } 
+        changeOrigemAtendimento();
+          
+        if (contatoAtendiento != "1-ATENDIMENTO COM SUCESSO" && campanha == "MUDANCA DE ENDERECO")
+        {
+            document.getElementById('divstaAtendimento').style.display = "none";
+            document.getElementById('divdetAtendimento').style.display = "none";
+        }
+        else if (contatoAtendiento != "1-ATENDIMENTO COM SUCESSO" && campanha == "TRANSFERENCIA DE TITULARIDADE")
+        {
+            document.getElementById('divstaAtendimento').style.display = "none";
+            document.getElementById('divdetAtendimento').style.display = "none";
+        }
+        else
+        {
+            document.getElementById('divstaAtendimento').style.display = "inherit";
+            document.getElementById('divdetAtendimento').style.display = "inherit";
+        }
+    }
+
+     function validaCampos()
+     {
+        if(campanha == "MUDANCA DE ENDERECO" || campanha == "TRANSFERENCIA DE TITULARIDADE")
+        {
+            if(statusContatoAtendimento == "1-ATENDIMENTO COM SUCESSO")
+            {
+                if (statusAtendimento == "" || statusAtendimento == "0" || statusAtendimento == "0-SELECIONE:")
+                {
+                    msg += "Selecione o campo 'Defina os atendimentos realizados nesta ligação:'!\n";
+                }
+
+                if (detalheAtendimento == "" || detalheAtendimento == "0" || detalheAtendimento == "0-SELECIONE:")
+                {
+                    msg += "Selecione o campo 'Detalhe do Atendimento:'!\n";
+                }
+            }
+        }
+        else if (campanha == "MPLAY")
+        {
+            if (statusAtendimento == "" || statusAtendimento == "0" || statusAtendimento == "0-SELECIONE:")
+            {
+                msg += "Selecione o campo 'Defina os atendimentos realizados nesta ligação:'!\n";
+            }
+            else if (statusContatoAtendimento != "8-VENDEDOR" && statusContatoAtendimento != "9-TELEFONIA")
+            {
+                if (detalheAtendimento == "" || detalheAtendimento == "0" || detalheAtendimento == "0-SELECIONE:")
+                {
+                    msg += "Selecione o campo 'Detalhe do Atendimento:'!\n";
+                }
+            }
+        }
+        else
+        {
+            if (statusAtendimento == "" || statusAtendimento == "0" || statusAtendimento == "0-SELECIONE:")
+            {
+                msg += "Selecione o campo 'Defina os atendimentos realizados nesta ligação:'!\n";
+            }
+
+            if (detalheAtendimento == "" || detalheAtendimento == "0" || detalheAtendimento == "0-SELECIONE:")
+            {
+                msg += "Selecione o campo 'Detalhe do Atendimento:'!\n";
+            }
+        }
+    }
+
+    <select class="custom-select d-block w-100" id="campanha" name="campanha"  onchange="changeCampanha();" required>
+        <option value="" selected>SELECIONE:</option>
+        <option value="HOTLINE">HOTLINE</option>
+        <option value="MPLAY">MPLAY</option>
+        <option value="MUDANCA DE ENDERECO">MUDANÇA DE ENDEREÇO</option>
+        <option value="TRANSFERENCIA DE TITULARIDADE">TRANSFERENCIA DE TITULARIDADE</option>
+    </select>
+
+    <div class="col-md-5 mb-3">
+        <div id="divstaAtendimento" name="divstaAtendimento">
+            <label for="staAtendimento">Defina os atendimentos realizados nesta ligação:</label>
+            <select class="custom-select d-block w-100" id="staAtendimento" name="staAtendimento" onchange="changeStatusAtendimemto();" required>
+                <option value="SELECIONE:" selected>SELECIONE:</option>
+            </select>
+            <div class="invalid-feedback">Selecione atendimento realizado nesta ligação</div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div id="divdetAtendimento" name="divdetAtendimento">
+            <label for="detAtendimento">Detalhe do Atendimento:</label>
+            <select class="custom-select d-block w-100" id="detAtendimento" name="detAtendimento" required>
+                <option value="SELECIONE:" selected>SELECIONE:</option>
+            </select>
+            <div class="invalid-feedback">Selecione detalhe do atendimento</div>
+        </div>
+    </div>
+
+# ******************************************
+2. Arquivo: carrega_status_contato.php
+
+    else if ($campanha == "MUDANCA DE ENDERECO")
+    {
+	    if($contato == "1-ATENDIMENTO COM SUCESSO")
+	    {
+		    $statuscode = "26,27";
+	    }
+    }
+    else if ($campanha == "TRANSFERENCIA DE TITULARIDADE")
+    {
+	    if($contato == "1-ATENDIMENTO COM SUCESSO")
+	    {
+		    $statuscode = "28,29";
+	    }
+    }
+
+# ******************************************
+3. carrega_detalhe.php
+
+$origem = $_GET['origem'];// origem do atendimento
+$conpro = $_GET['conpro'];//contrato / proposta
+$campanha = $_GET['campanha'];//Campanha
+
+if($campanha == "MUDANCA DE ENDERECO")
+{
+	if($status == 26)
+	{
+		$detail = "IN (1,2,3,4)";
+	}
+	else if ($status == 27)
+	{
+		$detail = "IN (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15)";
+	}
+}
+else if ($campanha == "TRANSFERENCIA DE TITULARIDADE")
+{
+	if($status == 28)
+	{
+		$detail = "IN (1,2)";
+	}
+	else if ($status == 29)
+	{
+		$detail = "IN (1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30)";
+	}	
+}
+
+# ##################################################################### #
+
+
+
+# ####################################################################### - - #######################################################################
+# ##################################################################### #
+# ##################################################################### #
+
+# ******************************************
+# ******************************************
+# ******************************************
+# ******************************************
+
+# ##################################################################### #
+
+# ####################################################################### - - #######################################################################
+# ##################################################################### #
+# ##################################################################### #
+
+# ******************************************
+# ******************************************
+# ******************************************
+# ******************************************
+
+# ##################################################################### #
+
+# ####################################################################### - - #######################################################################
+# ##################################################################### #
+# ##################################################################### #
+
+# ******************************************
+# ******************************************
+# ******************************************
+# ******************************************
+
+# ##################################################################### #
+
+# ####################################################################### - - #######################################################################
+# ##################################################################### #
+# ##################################################################### #
+
+# ******************************************
+# ******************************************
+# ******************************************
+# ******************************************
+
+# ##################################################################### #
